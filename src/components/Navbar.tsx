@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Brain, Dumbbell, GraduationCap, Users, Briefcase, Menu, Sun, Moon, Laptop, X, UserCircle } from 'lucide-react';
+import { Brain, Dumbbell, GraduationCap, Users, Briefcase, Menu, Sun, Moon, Laptop, X, UserCircle, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../hooks/useTheme';
 import { supabase } from '../lib/supabase';
@@ -41,8 +41,9 @@ const Navbar = () => {
     { path: '/dashboard', name: 'Dashboard', icon: Brain },
     { path: '/fitness', name: 'Fitness', icon: Dumbbell },
     { path: '/skills', name: 'Skills', icon: GraduationCap },
-    { path: '/community', name: 'Community', icon: Users },
     { path: '/jobs', name: 'Jobs', icon: Briefcase },
+    { path: '/applications', name: 'Applications', icon: FileText },
+    { path: '/community', name: 'Community', icon: Users },
   ];
 
   const themes: { name: Theme; icon: typeof Sun }[] = [

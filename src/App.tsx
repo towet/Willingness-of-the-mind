@@ -10,6 +10,7 @@ import ContentWriting from './pages/skills/ContentWriting';
 import GraphicDesign from './pages/skills/GraphicDesign';
 import Community from './pages/Community';
 import Jobs from './pages/Jobs';
+import Applications from './pages/Applications';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { ThemeProvider } from './components/theme-provider';
@@ -77,6 +78,7 @@ function App() {
                   <Route path="/skills/graphic-design" element={<GraphicDesign />} />
                   <Route path="/community" element={<Community />} />
                   <Route path="/jobs" element={<Jobs />} />
+                  <Route path="/applications" element={<Applications />} />
                 </Routes>
               </motion.div>
               <Footer />

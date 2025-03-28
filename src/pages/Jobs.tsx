@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, MapPin, Clock, DollarSign, X, Search, Filter, Send, Lock } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { JobApplicationService } from '../services/JobApplicationService';
 
 interface Job {
   id: number;
@@ -24,6 +26,7 @@ interface ApplicationForm {
 }
 
 const Jobs = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('All Locations');
   const [selectedType, setSelectedType] = useState('All Types');
@@ -107,12 +110,54 @@ const Jobs = () => {
     setShowApplicationModal(true);
   };
 
-  const handleSubmitApplication = (e: React.FormEvent) => {
+  const handleSubmitApplication = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the application data to your backend
-    setShowApplicationModal(false);
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000);
+
+    if (!selectedJob || !applicationForm.resume) return;
+
+    try {
+      // Convert resume file to base64
+      const reader = new FileReader();
+      const resumeBase64 = await new Promise<string>((resolve) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(applicationForm.resume as File);
+      });
+
+      // Save application using JobApplicationService
+      JobApplicationService.saveApplication({
+        jobTitle: selectedJob.title,
+        company: selectedJob.company,
+        applicantName: applicationForm.name,
+        email: applicationForm.email,
+        phone: applicationForm.phone,
+        resume: resumeBase64,
+        coverLetter: applicationForm.coverLetter
+      });
+
+      // Reset form and close modal
+      setApplicationForm({
+        name: '',
+        email: '',
+        phone: '',
+        coverLetter: '',
+        resume: null
+      });
+      setSelectedJob(null);
+      setShowApplicationModal(false);
+
+      // Show success message
+      setSuccessMessage('Application submitted successfully!');
+      setShowSuccess(true);
+
+      // Navigate to applications page
+      setTimeout(() => {
+        navigate('/applications');
+      }, 2000);
+    } catch (error) {
+      console.error('Error submitting application:', error);
+      setSuccessMessage('Error submitting application. Please try again.');
+      setShowSuccess(true);
+    }
   };
 
   const handleAdminAuth = (e: React.FormEvent) => {
